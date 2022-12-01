@@ -1,6 +1,10 @@
 package uk.co.brownandrew15.aoc2022;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.BeforeEach;
+
+import uk.co.brownandrew15.aoc2022.exceptions.DayNotFoundException;
 
 /**
  * Abstract class to aggregate the common code of the day tests.
@@ -14,7 +18,11 @@ public abstract class DayTest {
      */
     @BeforeEach
     public void setup() {
-        this.day = DayFactory.getDay(this.getDayNumber());
+        try {
+            this.day = DayFactory.getDay(this.getDayNumber());
+        } catch (DayNotFoundException e) {
+            fail(e.getMessage());
+        }
     }
 
     /**

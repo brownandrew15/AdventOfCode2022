@@ -1,10 +1,12 @@
 package uk.co.brownandrew15.aoc2022;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
 import uk.co.brownandrew15.aoc2022.days.*; // import all the days
+import uk.co.brownandrew15.aoc2022.exceptions.DayNotFoundException;
 
 /**
  * Tests the DayFactory class.
@@ -16,8 +18,13 @@ public class DayFactoryTest {
      */
     @Test
     public void testGetDay00() {
-        Day day = DayFactory.getDay(0);
-        assertEquals(day.getClass(), Day00.class);
+        try {
+            Day day = DayFactory.getDay(0);
+            assertEquals(day.getClass(), Day00.class);
+        } catch (DayNotFoundException e) {
+            fail(e.getMessage());
+        }
+        
     }
 
 }
