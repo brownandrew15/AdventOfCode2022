@@ -21,7 +21,11 @@ public class DayFactory {
             throw new DayNotFoundException(Integer.toString(dayNumber));
         }
 
-        
+        if (dayNumber == 0) {
+            return new Day00();
+        } else if (dayNumber == 1) {
+            return new Day01();
+        }
 
         return new Day00();
 
