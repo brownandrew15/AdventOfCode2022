@@ -21,7 +21,13 @@ public class Day02 extends Day {
     }
 
     public String solvePartTwo() {
-        return "";
+        int score = 0;
+        for (int i=0; i < this.fileLines.length; i++) {
+            String line = this.fileLines[i];
+            char player = this.getShapeForOutcome(line.charAt(0), line.charAt(2));
+            score += this.getScore(line.charAt(0), player);
+        }
+        return Integer.toString(score);
     }
 
     /**
@@ -80,6 +86,45 @@ public class Day02 extends Day {
             return 1;
         } else { // C or Z
             return 2;
+        }
+    }
+
+
+
+    /**
+     * Returns the character A, B or C depending on what the player needs to play to get the outcome.
+     * 
+     * @param opponent the character the opponent played
+     * @param outcome the outcome required
+     * @return the character the player needs to get the outcome
+     */
+    private char getShapeForOutcome(char opponent, char outcome) {
+        int opponentScore = this.unencrpyt(opponent);
+        if (outcome == 'Z') {
+            // player win
+            return this.encryptForPlayer((opponentScore + 1) % 3);
+        } else if (outcome == 'X') {
+            // player loss
+            return this.encryptForPlayer((opponentScore - 1) % 3);
+        }
+
+        // draw
+        return this.encryptForPlayer(opponentScore); // need to play the same shape to draw
+    }
+
+    /**
+     * Encrypts the player shape score into the corresponding character.
+     * 
+     * @param value the score (0 for rock, 1 for paper and 2 for scissors)
+     * @return the character for the shape (X for rock, Y for paper and Z for scissors)
+     */
+    private char encryptForPlayer(int value) {
+        if (value == 0) {
+            return 'X';
+        } else if (value == 1) {
+            return 'Y';
+        } else {
+            return 'Z';
         }
     }
 
