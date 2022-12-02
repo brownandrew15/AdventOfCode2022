@@ -16,18 +16,16 @@ public class DayFactory {
      */
     public static Day getDay(int dayNumber) throws DayNotFoundException {
 
-        // check the day is in range
-        if ((dayNumber < 0) || (dayNumber > 25)) {
-            throw new DayNotFoundException(Integer.toString(dayNumber));
-        }
-
         if (dayNumber == 0) {
             return new Day00();
         } else if (dayNumber == 1) {
             return new Day01();
+        } else if (dayNumber == 2) {
+            return new Day02();
+        } else {
+            throw new DayNotFoundException(dayNumber);
         }
 
-        return new Day00();
 
     }
 

@@ -1,6 +1,7 @@
 package uk.co.brownandrew15.aoc2022;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,16 @@ import uk.co.brownandrew15.aoc2022.exceptions.DayNotFoundException;
  * Tests the DayFactory class.
  */
 public class DayFactoryTest {
+
+    /**
+     * Tests that the DayNotFoundException is thrown when an invalid day is passed.
+     */
+    @Test
+    public void testInvalidDay() {
+        assertThrows(DayNotFoundException.class, () -> {
+            DayFactory.getDay(-1);
+        });
+    }
     
     /**
      * Tests that a Day00 object is returned for day 0.
@@ -34,6 +45,19 @@ public class DayFactoryTest {
         try {
             Day day = DayFactory.getDay(1);
             assertEquals(day.getClass(), Day01.class);
+        } catch (DayNotFoundException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Tests that a Day01 object is returned for day 2.
+     */
+    @Test
+    public void testGetDay02() {
+        try {
+            Day day = DayFactory.getDay(2);
+            assertEquals(day.getClass(), Day02.class);
         } catch (DayNotFoundException e) {
             fail(e.getMessage());
         }

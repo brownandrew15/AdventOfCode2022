@@ -17,9 +17,9 @@ public class DayNotFoundException extends Exception {
     /**
      * Constructs a DayNotFoundException with an error message including the provided day number.
      * 
-     * @param day the String of the day number
+     * @param day the day number
      */
-    public DayNotFoundException(String day) {
-        super("DayNotFoundException: Day " + day + " not found");
+    public DayNotFoundException(int day) {
+        super("DayNotFoundException: Day " + Integer.toString(day) + " not found");
     }
 }

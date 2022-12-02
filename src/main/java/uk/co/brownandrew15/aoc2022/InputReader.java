@@ -1,7 +1,6 @@
 package uk.co.brownandrew15.aoc2022;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -38,8 +37,9 @@ public class InputReader {
             }
             bufferedReader.close();
             return lines.toArray(new String[lines.size()]);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("There was an exception reading " + filename);
+            System.err.println(e.getMessage());
             return new String[0];
         }
             
