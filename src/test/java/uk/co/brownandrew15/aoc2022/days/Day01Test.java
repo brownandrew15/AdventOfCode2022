@@ -36,4 +36,10 @@ public class Day01Test extends DayTest {
         assertEquals("24000", actual, "The total calories was not the expected amount");
     }
 
+    @Test
+    public void testSolvePartTwo() {
+        String actual = this.day.solvePartTwo();
+        assertEquals("45000", actual, "The sum of the top 3 numbers of calories was not the expected amount");
+    }
+
 }
