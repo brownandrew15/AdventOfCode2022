@@ -51,13 +51,26 @@ public class DayFactoryTest {
     }
 
     /**
-     * Tests that a Day01 object is returned for day 2.
+     * Tests that a Day02 object is returned for day 2.
      */
     @Test
     public void testGetDay02() {
         try {
             Day day = DayFactory.getDay(2);
             assertEquals(day.getClass(), Day02.class);
+        } catch (DayNotFoundException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Tests that a Day03 object is returned for day 3.
+     */
+    @Test
+    public void testGetDay03() {
+        try {
+            Day day = DayFactory.getDay(3);
+            assertEquals(day.getClass(), Day03.class);
         } catch (DayNotFoundException e) {
             fail(e.getMessage());
         }
