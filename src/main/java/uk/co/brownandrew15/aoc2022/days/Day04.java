@@ -16,7 +16,7 @@ public class Day04 extends Day {
         int overlaps = 0;
         for (int i=0; i < this.fileLines.length;i++) {
             Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> ranges = this.getRanges(this.fileLines[i]);
-            if (this.doRangesOverlap(ranges.getLeft(), ranges.getRight())) {
+            if (this.doRangesOverlapFully(ranges.getLeft(), ranges.getRight())) {
                 overlaps++;
             }
         }
@@ -24,7 +24,14 @@ public class Day04 extends Day {
     }
 
     public String solvePartTwo() {
-        return "";
+        int overlaps = 0;
+        for (int i=0; i < this.fileLines.length;i++) {
+            Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> ranges = this.getRanges(this.fileLines[i]);
+            if (this.doRangesOverlap(ranges.getLeft(), ranges.getRight())) {
+                overlaps++;
+            }
+        }
+        return Integer.toString(overlaps);
     }
 
 
@@ -61,10 +68,29 @@ public class Day04 extends Day {
      * @param second the second range
      * @return true if the ranges overlap fully, false otherwise
      */
-    private boolean doRangesOverlap(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
+    private boolean doRangesOverlapFully(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
         boolean firstContainsSecond = (first.getLeft() <= second.getLeft()) && (first.getRight() >= second.getRight());
         boolean secondContainsFirst = (second.getLeft() <= first.getLeft()) && (second.getRight() >= first.getRight());
         return (firstContainsSecond || secondContainsFirst);
+    }
+
+    /**
+     * Returns if the ranges overlap.
+     * 
+     * @param first the first range
+     * @param second the second range
+     * @return true if the ranges overlap, false otherwise
+     */
+    private boolean doRangesOverlap(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
+        boolean firstStartsInSecond = (second.getLeft() <= first.getLeft()) && (first.getLeft() <= second.getRight());
+            // second.left <= first.left <= second.right
+        boolean firstEndsInSecond = (second.getLeft() <= first.getRight()) && (first.getRight() <= second.getRight());
+            // second.left <= first.right <= second.right
+        boolean secondStartsInFirst = (first.getLeft() <= second.getLeft()) && (second.getLeft() <= first.getRight());
+            // first.left <= second.left <= first.right
+        boolean secondEndsInFirst = (first.getLeft() <= second.getRight()) && (second.getRight() <= first.getRight());
+            // first.left <= second.right <= first.right
+        return (firstStartsInSecond || firstEndsInSecond || secondStartsInFirst || secondEndsInFirst);
     }
 
 }

@@ -39,7 +39,7 @@ public class Day04Test extends DayTest {
     @Test
     public void testSolvePartTwo() {
         String actual = this.day.solvePartTwo();
-        assertEquals("", actual, "");
+        assertEquals("4", actual, "The number of pairs that overlap at all was not the expected value");
     }
 
 }
