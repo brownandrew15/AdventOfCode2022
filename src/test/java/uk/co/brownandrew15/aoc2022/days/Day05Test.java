@@ -39,7 +39,7 @@ public class Day05Test extends DayTest {
     @Test
     public void testSolvePartTwo() {
         String actual = this.day.solvePartTwo();
-        assertEquals("", actual, "");
+        assertEquals("MCD", actual, "The message was not the expected message");
     }
 
 }

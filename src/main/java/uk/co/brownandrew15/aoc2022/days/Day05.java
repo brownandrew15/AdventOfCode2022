@@ -22,13 +22,17 @@ public class Day05 extends Day {
     public String solvePartOne() {
         Pair<Map<Integer, Stack<Character>>, List<String>> inputs = this.processInput();
         Map<Integer, Stack<Character>> containers = inputs.getLeft();
-        List<String> instructions = inputs.getRight();
-        this.processInstructions(instructions, containers);
+        List<Pair<Integer, Pair<Integer, Integer>>> instructions = this.processInstructions(inputs.getRight());
+        this.runInstructions(containers, instructions);
         return this.getMessage(containers);
     }
 
     public String solvePartTwo() {
-        return "";
+        Pair<Map<Integer, Stack<Character>>, List<String>> inputs = this.processInput();
+        Map<Integer, Stack<Character>> containers = inputs.getLeft();
+        List<Pair<Integer, Pair<Integer, Integer>>> instructions = this.processInstructions(inputs.getRight());
+        this.runInstructionsRetainingOrder(containers, instructions);
+        return this.getMessage(containers);
     }
 
 
@@ -103,22 +107,60 @@ public class Day05 extends Day {
     }
 
     /**
-     * Processes the instruction from the input file.
+     * Processes the instructions from the input file.
      * 
-     * @param instructions the list of instructions from the input file
-     * @param containers the map of the containers
+     * @param instructionStrings the list of instruction strings from the input file
+     * @return the 
      */
-    private void processInstructions(List<String> instructions, Map<Integer, Stack<Character>> containers) {
-        for (int i=0; i < instructions.size(); i++) {
-            String instruction = instructions.get(i);
-            String[] instructionArray = instruction.split(" ");
-            int[] instructionValues = {
-                Integer.parseInt(instructionArray[1]),  // number to move
-                Integer.parseInt(instructionArray[3]),  // from stack
-                Integer.parseInt(instructionArray[5])   // to stack
-            };
-            for (int j=0; j < instructionValues[0]; j++) {
-                this.moveContainer(containers, instructionValues[1], instructionValues[2]);
+    private List<Pair<Integer, Pair<Integer, Integer>>> processInstructions(List<String> instructionStrings) {
+        List<Pair<Integer, Pair<Integer, Integer>>> instructions = new ArrayList<Pair<Integer, Pair<Integer, Integer>>>();
+        for (int i=0; i < instructionStrings.size(); i++) {
+            String instructionString = instructionStrings.get(i);
+            String[] instructionArray = instructionString.split(" ");
+
+            Pair<Integer, Integer> stacks = new Pair<Integer, Integer>(
+                Integer.parseInt(instructionArray[3]),   // from stack
+                Integer.parseInt(instructionArray[5])    // to stack
+            );
+
+            Pair<Integer, Pair<Integer, Integer>> instruction = new Pair<Integer, Pair<Integer, Integer>>(
+                Integer.parseInt(instructionArray[1]), // number to move
+                stacks
+            );
+
+            instructions.add(instruction);
+        }
+        return instructions;
+    }
+
+
+    /**
+     * Runs the instructions on the container stacks.
+     * 
+     * @param containers the container stacks
+     * @param instructions the instructions
+     */
+    private void runInstructions(Map<Integer, Stack<Character>> containers, List<Pair<Integer, Pair<Integer, Integer>>> instructions) {
+        for (int i=0; i < instructions.size(); i++){
+            Pair<Integer, Pair<Integer, Integer>> instruction = instructions.get(i);
+            for (int j=0; j < instruction.getLeft(); j++) {
+                this.moveContainer(containers, instruction.getRight().getLeft(), instruction.getRight().getRight());
+            }
+        }
+    }
+
+
+    private void runInstructionsRetainingOrder(Map<Integer, Stack<Character>> containers, List<Pair<Integer, Pair<Integer, Integer>>> instructions) {
+        for (int i=0; i < instructions.size(); i++){
+            Pair<Integer, Pair<Integer, Integer>> instruction = instructions.get(i);
+            Stack<Character> tempStack = new Stack<Character>();
+            for (int j=0; j < instruction.getLeft(); j++) {
+                char character = containers.get(instruction.getRight().getLeft()).pop();
+                tempStack.push(character);
+            }
+            while (!(tempStack.isEmpty())) {
+                char character = tempStack.pop();
+                containers.get(instruction.getRight().getRight()).push(character);   
             }
         }
     }
