@@ -39,7 +39,7 @@ public class Day06Test extends DayTest {
     @Test
     public void testSolvePartTwo() {
         String actual = this.day.solvePartTwo();
-        assertEquals("", actual, "");
+        assertEquals("19", actual, "The number of characrters before the start of message marker was not the expected value");
     }
 
 }

@@ -21,7 +21,9 @@ public class Day06 extends Day {
     }
 
     public String solvePartTwo() {
-        return "";
+        int substringLength = 14;
+        int startIndex = this.getIndexOfUniqueCharSubstring(this.fileLines[0], substringLength);
+        return Integer.toString(startIndex + substringLength);
     }
 
 
