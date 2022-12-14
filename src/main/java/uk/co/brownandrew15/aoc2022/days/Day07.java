@@ -22,7 +22,10 @@ public class Day07 extends Day {
     }
 
     public String solvePartTwo() {
-        return "";
+        Map<String, Integer> dirSizes = this.getDirSizes(this.fileLines);
+        int spaceClear = 70000000 - dirSizes.get("/");
+        int smallestDirSizeToDelete = this.getSmallestDirSizeToDelete(dirSizes, 30000000, spaceClear);
+        return Integer.toString(smallestDirSizeToDelete);
     }
 
 
@@ -123,7 +126,7 @@ public class Day07 extends Day {
 
         // add the file size to each level of the filepath
         while (!(dirStack.isEmpty())) {
-            String path = dirStack.toString();
+            String path = this.getStackAsPath(dirStack);
             this.updateMap(sizeMap, path, fileSize);
             holdingStack.push(dirStack.pop());
         }
@@ -132,8 +135,21 @@ public class Day07 extends Day {
         while (!(holdingStack.isEmpty())) {
             dirStack.push(holdingStack.pop());
         }
+    }
 
-
+    /**
+     * Returns the directory stack as a directory path.
+     * 
+     * @param dirStack the directory stack
+     * @return the directory path
+     */
+    private String getStackAsPath(Stack<String> dirStack) {
+        String asString = dirStack.toString();
+        asString = asString.replaceAll("\\[", "");
+        asString = asString.replaceAll("\\]", "");
+        asString = asString.replaceAll(",", "/");
+        asString = asString.replaceAll("//", "/");
+        return asString;
     }
 
     /**
@@ -169,6 +185,25 @@ public class Day07 extends Day {
             }
         }
         return total;
+    }
+
+    /**
+     * Returns the size of the smallest directory that can be deleted that will clear enough space for the space required.
+     * 
+     * @param dirSizes the map of the directory sizes
+     * @param spaceRequired the space required to be clear
+     * @param spaceClear the current space clear
+     * @return the size of the smallest directory that when deleted will leave enough space
+     */
+    private int getSmallestDirSizeToDelete(Map<String, Integer> dirSizes, int spaceRequired, int spaceClear) {
+        int greatestMinSize = dirSizes.get("/");
+        for (String path : dirSizes.keySet()) {
+            int dirSize = dirSizes.get(path);
+            if ((dirSize < greatestMinSize) && ((dirSize + spaceClear) > spaceRequired)) {
+                greatestMinSize = dirSize;
+            }
+        }
+        return greatestMinSize;
     }
 
 

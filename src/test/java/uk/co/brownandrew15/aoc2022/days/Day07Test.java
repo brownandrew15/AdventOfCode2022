@@ -39,7 +39,7 @@ public class Day07Test extends DayTest {
     @Test
     public void testSolvePartTwo() {
         String actual = this.day.solvePartTwo();
-        assertEquals("", actual, "");
+        assertEquals("24933642", actual, "The size of the smallest directory to be deleted was not the expected size");
     }
 
 }
