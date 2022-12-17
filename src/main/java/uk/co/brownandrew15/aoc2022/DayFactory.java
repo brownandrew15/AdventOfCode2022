@@ -32,6 +32,8 @@ public class DayFactory {
             return new Day06();
         } else if (dayNumber == 7) {
             return new Day07();
+        } else if (dayNumber == 8) {
+            return new Day08();
         } else {
             throw new DayNotFoundException(dayNumber);
         }
