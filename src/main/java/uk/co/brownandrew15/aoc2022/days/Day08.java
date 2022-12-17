@@ -18,7 +18,9 @@ public class Day08 extends Day {
     }
 
     public String solvePartTwo() {
-        return "";
+        int[][] grid = createGrid(this.fileLines);
+        int scenicScore = this.getMaxScenicScore(grid);
+        return Integer.toString(scenicScore);
     }
 
 
@@ -69,64 +71,142 @@ public class Day08 extends Day {
      * @return true if the tree can be seen from the edge, false otherwise
      */
     private boolean canTreeBeSeenFromEdge(int[][] grid, int x, int y) {
-        return this.isTreeSeenAlongX(grid, x, y, +1)
-                || this.isTreeSeenAlongX(grid, x, y, -1)
-                || this.isTreeSeenAlongY(grid, x, y, +1)
-                || this.isTreeSeenAlongY(grid, x, y, -1);     
+        boolean canBeSeen = false; // assume the tree cannot be seen
+        int upViewable = this.getUpDistanceViewable(grid, x, y);
+        int downViewable = this.getDownDistanceViewable(grid, x, y);
+        int leftViewable = this.getLeftDistanceViewable(grid, x, y);
+        int rightViewable = this.getRightDistanceViewable(grid, x, y);
+        canBeSeen = canBeSeen || (upViewable == y);
+        canBeSeen = canBeSeen || (downViewable == ((grid.length - 1) - y));
+        canBeSeen = canBeSeen || (leftViewable == x);
+        canBeSeen = canBeSeen || (rightViewable == ((grid[y].length - 1) - x));
+        return canBeSeen;
     }
 
     /**
-     * Returns if the tree can be seen from along the y axis.
+     * Returns the distance viewable upwards.
      * 
      * @param grid the tree height grid
-     * @param treeX the x position of the tree
-     * @param treeY the y position of the tree
-     * @param xStep the amount to step the x value by, should be +1 or -1
-     * @return true if the tree can be seen, false otherwise
+     * @param treeX the tree's X position in the grid
+     * @param treeY the tree's Y position in the grid
+     * @return the distance viewable
      */
-    private boolean isTreeSeenAlongY(int[][] grid, int treeX, int treeY, int xStep) {
-        return this.isTreeSeenFromDirection(grid, treeX, treeY, xStep, 0);
+    private int getUpDistanceViewable(int[][] grid, int treeX, int treeY) {
+        return this.getDistanceViewable(grid, treeX, treeY, 0, -1);
     }
 
     /**
-     * Returns if the tree can be seen from along the x axis.
+     * Returns the distance viewable downwards.
      * 
      * @param grid the tree height grid
-     * @param treeX the x position of the tree
-     * @param treeY the y position of the tree
-     * @param yStep the amount to step the y value by, should be +1 or -1
-     * @return true if the tree can be seen, false otherwise
+     * @param treeX the tree's X position in the grid
+     * @param treeY the tree's Y position in the grid
+     * @return the distance viewable
      */
-    private boolean isTreeSeenAlongX(int[][] grid, int treeX, int treeY, int yStep) {
-        return this.isTreeSeenFromDirection(grid, treeX, treeY, 0, yStep);
+    private int getDownDistanceViewable(int[][] grid, int treeX, int treeY) {
+        return this.getDistanceViewable(grid, treeX, treeY, 0, 1);
     }
 
     /**
-     * Returns if the tree can be seen along a given line
+     * Returns the distance viewable to the left.
      * 
      * @param grid the tree height grid
-     * @param treeX the x position of the tree
-     * @param treeY the y position of the tree
-     * @param xStep the amount to step the x value by, should be +1, 0 or -1
-     * @param yStep the amount to step the y value by, should be +1, 0 or -1
-     * @return true if the tree can be seen, false otherwise
+     * @param treeX the tree's X position in the grid
+     * @param treeY the tree's Y position in the grid
+     * @return the distance viewable
      */
-    private boolean isTreeSeenFromDirection(int[][] grid, int treeX, int treeY, int xStep, int yStep) {
+    private int getLeftDistanceViewable(int[][] grid, int treeX, int treeY) {
+        return this.getDistanceViewable(grid, treeX, treeY, -1, 0);
+    }
+
+    /**
+     * Returns the distance viewable to the right.
+     * 
+     * @param grid the tree height grid
+     * @param treeX the tree's X position in the grid
+     * @param treeY the tree's Y position in the grid
+     * @return the distance viewable
+     */
+    private int getRightDistanceViewable(int[][] grid, int treeX, int treeY) {
+        return getDistanceViewable(grid, treeX, treeY, 1, 0);
+    }
+
+
+    /**
+     * Returns the distance viewable along a line in the grid.
+     * The line is set using the xStep and yStep parameters and always passes through (treeX,treeY).
+     * 
+     * @param grid the tree height grid
+     * @param treeX the X position of the tree
+     * @param treeY the Y position of the tree
+     * @param xStep the x step, should be 1, 0 or -1
+     * @param yStep the y step, should be 1, 0 or -1
+     * @return the distance viewable along the line
+     */
+    private int getDistanceViewable(int[][] grid, int treeX, int treeY, int xStep, int yStep) {
+        int distance = 0;
         // intitalise the loop variables to be the first position to be checked
         int x = treeX + xStep;
         int y = treeY + yStep;
         while ((y >= 0) && (y < grid.length) && (x >= 0) && (x < grid[y].length)) {
-                // while (x, y) is in the grid
-                if (grid[y][x] >= grid[treeY][treeX]) {
-                    // tree is blocked by (x,y)
-                    return false;
-                }
+            // while (x, y) is in the grid
+            if (grid[y][x] >= grid[treeY][treeX]) {
+                // tree is blocked by (x,y) - return the distance
+                return distance;
+            }
+            distance++; // the tree wasn't blocked - increment the viewable distance
             // increment the loop variables
             x += xStep;
             y += yStep;
         }
-        // no trees blocked the current tree - return that the tree can be seen
-        return true;
+        // reached the edge - return the score
+        return distance;
     }
 
+
+    /**
+     * Returns the maximum scenic score for the tree grid.
+     * 
+     * @param grid the tree height grid
+     * @return the maximum scenic score
+     */
+    private int getMaxScenicScore(int[][] grid) {
+        int maxScore = 0;
+        for (int y=0; y < grid.length; y++) {
+            for (int x=0; x < grid[y].length; x++) {
+                int score = this.getScenicScore(grid, x, y);
+                if (score > maxScore) {
+                    maxScore = score;
+                }
+            }
+        }
+        return maxScore;
+    }
+
+
+    /**
+     * Returns the scenic score for a given tree.
+     * 
+     * @param grid the tree height grid
+     * @param x the tree's X position
+     * @param y the tree's Y position
+     * @return the tree's scenic score
+     */
+    private int getScenicScore(int[][] grid, int x, int y) {
+        int score = 1; 
+        int upViewable = this.getUpDistanceViewable(grid, x, y);
+        int downViewable = this.getDownDistanceViewable(grid, x, y);
+        int leftViewable = this.getLeftDistanceViewable(grid, x, y);
+        int rightViewable = this.getRightDistanceViewable(grid, x, y);
+        if (!(upViewable == y)) upViewable++;
+        if (!(downViewable == ((grid.length - 1) - y))) downViewable++;
+        if (!(leftViewable == x)) leftViewable++;
+        if (!(rightViewable == ((grid[y].length - 1) - x))) rightViewable++;
+        score *= upViewable;
+        score *= downViewable;
+        score *= leftViewable;
+        score *= rightViewable;
+        return score;
+    }
+    
 }

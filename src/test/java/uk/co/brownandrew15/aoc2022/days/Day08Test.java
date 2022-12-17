@@ -39,7 +39,7 @@ public class Day08Test extends DayTest {
     @Test
     public void testSolvePartTwo() {
         String actual = this.day.solvePartTwo();
-        assertEquals("", actual, "");
+        assertEquals("8", actual, "The best senic score was not the expected value");
     }
 
 }
