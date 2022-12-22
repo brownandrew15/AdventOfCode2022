@@ -143,4 +143,17 @@ public class DayFactoryTest {
         }
     }
 
+    /**
+     * Tests that a Day09 object is returned for day 9.
+     */
+    @Test
+    public void testGetDay09() {
+        try {
+            Day day = DayFactory.getDay(9);
+            assertEquals(day.getClass(), Day09.class);
+        } catch (DayNotFoundException e) {
+            fail(e.getMessage());
+        }
+    }
+
 }

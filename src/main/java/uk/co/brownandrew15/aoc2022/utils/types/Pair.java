@@ -37,9 +37,32 @@ public class Pair<T, U> {
         return this.right;
     }
 
-
+    @Override
     public String toString() {
         return "(" + this.left.toString() + "," + this.right.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Pair<?, ?>)) {
+            return false;
+        }
+        @SuppressWarnings("unchecked") Pair<T, U> other = (Pair<T, U>) o;
+        return (
+            this.getLeft().equals(other.getLeft()) 
+            && (this.getRight().equals(other.getRight()))
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + this.getLeft().hashCode();
+        result = 31 * result + this.getRight().hashCode();
+        return result;
     }
 
 }
